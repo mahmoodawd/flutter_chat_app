@@ -17,7 +17,13 @@ class Lobby extends StatelessWidget {
           builder: (context, child, model) {
         return Scaffold(
             appBar: AppBar(
-              title: const Text('Lobby'),
+              title: Text(
+                'Lobby',
+                style: Theme.of(model.rootBuildContext)
+                    .textTheme
+                    .bodyText1!
+                    .copyWith(fontSize: 18, color: Colors.white),
+              ),
             ),
             drawer: const AppDrawer(),
             floatingActionButton: FloatingActionButton(
@@ -27,16 +33,23 @@ class Lobby extends StatelessWidget {
               },
             ),
             body: model.roomList.isEmpty
-                ? Center(
-                    child: Text(
-                      'No rooms yet \n\n Click the lower-right button to create one',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        fontSize: 26,
-                        fontWeight: FontWeight.bold,
-                        color: Theme.of(context).primaryColor,
+                ? Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      const Icon(
+                        Icons.question_mark_rounded,
+                        size: 72,
                       ),
-                    ),
+                      Center(
+                        child: Text(
+                          'No rooms yet! \n\n Click the lower-right button to create the first room',
+                          textAlign: TextAlign.center,
+                          style: Theme.of(model.rootBuildContext)
+                              .textTheme
+                              .headline1,
+                        ),
+                      ),
+                    ],
                   )
                 : ListView.builder(
                     itemCount: model.roomList.length,
@@ -46,54 +59,63 @@ class Lobby extends StatelessWidget {
                       String roomDescription = room['description'];
                       bool isPrivate = room['private'];
 
-                      return ListTile(
-                        title: Text(roomName),
-                        subtitle: Text(roomDescription),
-                        leading: isPrivate
-                            ? Image.asset('assets/images/private_room_icon.png')
-                            : Image.asset('assets/images/public_room_icon.png'),
-                        onTap: () {
-                          if (isPrivate &&
-                              room['creator'] != model.userName &&
-                              !model.roomInvites.containsKey(roomName)) {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                    backgroundColor: Colors.red,
-                                    duration: Duration(seconds: 2),
-                                    content: Text(
-                                        'Sorry!, you can not enter a private room without an invitation')));
-                          } else {
-                            connector.join(roomName, model.userName,
-                                (inStatus, inRoomDescriptor) {
-                              if (inStatus == 'full') {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                    const SnackBar(
-                                        backgroundColor: Colors.red,
-                                        duration: Duration(seconds: 2),
-                                        content:
-                                            Text('Sorry!, This room is full')));
-                              } else if (inStatus == 'joined') {
-                                isRoomMember(model.userName,
-                                        model.currentRoomUserList)
-                                    ? {}
-                                    : model.clearCurrentRoomMessages();
-                                model
-                                  ..setCurrentRoomName(
-                                      inRoomDescriptor['roomName'])
-                                  ..setCurrentRoomUserList(
-                                      inRoomDescriptor['users'])
-                                  ..setCurrentRoomEnabled(true);
-                                if (inRoomDescriptor['creator'] ==
-                                    model.userName) {
-                                  model.setCreatorFunctionsEnabled(true);
-                                } else {
-                                  model.setCreatorFunctionsEnabled(false);
+                      return Card(
+                        margin: const EdgeInsets.symmetric(
+                            vertical: 5, horizontal: 10),
+                        elevation: 10.0,
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10)),
+                        child: ListTile(
+                          title: Text(roomName),
+                          subtitle: Text(roomDescription),
+                          leading: isPrivate
+                              ? Image.asset(
+                                  'assets/images/private_room_icon.png')
+                              : Image.asset(
+                                  'assets/images/public_room_icon.png'),
+                          onTap: () {
+                            if (isPrivate &&
+                                room['creator'] != model.userName &&
+                                !model.roomInvites.containsKey(roomName)) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                      backgroundColor: Colors.red,
+                                      duration: Duration(seconds: 2),
+                                      content: Text(
+                                          'Sorry!, you can not enter a private room without an invitation')));
+                            } else {
+                              connector.join(roomName, model.userName,
+                                  (inStatus, inRoomDescriptor) {
+                                if (inStatus == 'full') {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                      const SnackBar(
+                                          backgroundColor: Colors.red,
+                                          duration: Duration(seconds: 2),
+                                          content: Text(
+                                              'Sorry!, This room is full')));
+                                } else if (inStatus == 'joined') {
+                                  isRoomMember(model.userName,
+                                          model.currentRoomUserList)
+                                      ? {}
+                                      : model.clearCurrentRoomMessages();
+                                  model
+                                    ..setCurrentRoomName(
+                                        inRoomDescriptor['roomName'])
+                                    ..setCurrentRoomUserList(
+                                        inRoomDescriptor['users'])
+                                    ..setCurrentRoomEnabled(true);
+                                  if (inRoomDescriptor['creator'] ==
+                                      model.userName) {
+                                    model.setCreatorFunctionsEnabled(true);
+                                  } else {
+                                    model.setCreatorFunctionsEnabled(false);
+                                  }
+                                  Navigator.of(context).pushNamed('/Room');
                                 }
-                                Navigator.of(context).pushNamed('/Room');
-                              }
-                            });
-                          }
-                        },
+                              });
+                            }
+                          },
+                        ),
                       );
                     },
                   ));

@@ -15,6 +15,7 @@ import '../screens/lobby.dart';
 import '../screens/room.dart';
 import '../screens/user_list.dart';
 import '../widgets/login_dialog.dart';
+import '../screens/login.dart';
 
 var credentials;
 var credentialFileExists;
@@ -43,7 +44,16 @@ class FlutterChat extends StatelessWidget {
     return MaterialApp(
       title: 'Flutter chat',
       theme: ThemeData(
-        primarySwatch: Colors.cyan,
+        primarySwatch: Colors.grey,
+        textTheme: const TextTheme(
+          bodyText1: TextStyle(
+            fontFamily: "BreeSerif",
+            fontSize: 14,
+            fontWeight: FontWeight.bold,
+          ),
+          headline1: TextStyle(
+              fontFamily: "Lobster", fontSize: 48, color: Colors.black),
+        ),
       ),
       home: const Scaffold(
         body: FlutterChatMain(),
@@ -66,6 +76,7 @@ class FlutterChatMain extends StatelessWidget {
             return MaterialApp(
                 initialRoute: "/",
                 routes: {
+                  '/Login': (screenContext) => const Login(),
                   '/Lobby': (screenContext) => const Lobby(),
                   "/Room": (screenContext) => const Room(),
                   "/UserList": (screenContext) => const UserList(),
@@ -79,15 +90,13 @@ class FlutterChatMain extends StatelessWidget {
   Future<void> excuteAfterBuild() async {
     if (credentialFileExists) {
       List credParts = credentials.split('============');
-      const LoginDialog().validateWithStoredCredentials(credParts[0], credParts[1]);
+      const LoginDialog()
+          .validateWithStoredCredentials(credParts[0], credParts[1]);
     } else {
-      await showDialog(
-        context: model.rootBuildContext,
-        barrierDismissible: false,
-        builder: (inDialogContext) {
-          return const LoginDialog();
-        },
-      );
+      Navigator.push<void>(
+          model.rootBuildContext,
+          MaterialPageRoute<void>(
+              builder: (BuildContext context) => const Login()));
     }
   }
 }

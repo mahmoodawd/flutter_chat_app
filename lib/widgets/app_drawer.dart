@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 
 import "../model.dart" show FlutterChatModel, model;
 import '../connector.dart' as connector;
-import 'login_dialog.dart';
+import '../screens/login.dart';
 
 class AppDrawer extends StatelessWidget {
   const AppDrawer({
@@ -20,8 +20,10 @@ class AppDrawer extends StatelessWidget {
         child: ScopedModelDescendant<FlutterChatModel>(
             builder: (context, inChild, inModel) {
           return Drawer(
+            width: MediaQuery.of(context).size.width * .70,
             child: Column(children: [
               Container(
+                padding: const EdgeInsets.all(16),
                 height: 100,
                 decoration: const BoxDecoration(
                   image: DecorationImage(
@@ -32,22 +34,26 @@ class AppDrawer extends StatelessWidget {
                   title: Text(
                     model.userName,
                     textAlign: TextAlign.center,
-                    style: const TextStyle(
-                      color: Colors.white,
-                    ),
+                    style: Theme.of(model.rootBuildContext)
+                        .textTheme
+                        .bodyText1!
+                        .copyWith(color: Colors.white),
                   ),
                   subtitle: Text(
                     model.currentRoomName,
                     textAlign: TextAlign.center,
-                    style: const TextStyle(
-                      fontSize: 18,
-                      color: Colors.white,
-                    ),
+                    style: Theme.of(model.rootBuildContext)
+                        .textTheme
+                        .headline1!
+                        .copyWith(fontSize: 18, color: Colors.white),
                   ),
                 ),
               ),
               ListTile(
-                title: const Text('Lobby'),
+                title: Text(
+                  'Lobby',
+                  style: Theme.of(context).textTheme.bodyText1,
+                ),
                 leading: const Icon(Icons.list),
                 onTap: () {
                   Navigator.of(context).pushNamedAndRemoveUntil(
@@ -58,11 +64,15 @@ class AppDrawer extends StatelessWidget {
                 },
               ),
               const SizedBox(
-                height: 5,
+                height: 10,
+                child: Divider(),
               ),
               ListTile(
                 enabled: model.currentRoomEnabled,
-                title: const Text('Current room'),
+                title: Text(
+                  'Current room',
+                  style: Theme.of(context).textTheme.bodyText1,
+                ),
                 leading: const Icon(Icons.chat_rounded),
                 onTap: () {
                   Navigator.of(context).pushNamedAndRemoveUntil(
@@ -70,10 +80,14 @@ class AppDrawer extends StatelessWidget {
                 },
               ),
               const SizedBox(
-                height: 5,
+                height: 10,
+                child: Divider(),
               ),
               ListTile(
-                title: const Text('Users'),
+                title: Text(
+                  'Users',
+                  style: Theme.of(context).textTheme.bodyText1,
+                ),
                 leading: const Icon(Icons.people),
                 onTap: () {
                   Navigator.of(context).pushNamedAndRemoveUntil(
@@ -83,19 +97,22 @@ class AppDrawer extends StatelessWidget {
                   });
                 },
               ),
+              const SizedBox(
+                height: 10,
+                child: Divider(),
+              ),
               ListTile(
-                title: const Text('Logout'),
+                title: Text(
+                  'Logout',
+                  style: Theme.of(context).textTheme.bodyText1,
+                ),
                 leading: const Icon(Icons.logout),
                 onTap: () async {
                   connector.resetSocketConnection();
-                  Navigator.of(context)
-                      .pushNamedAndRemoveUntil('/', ModalRoute.withName('/'));
-                  await showDialog(
-                      context: model.rootBuildContext,
-                      barrierDismissible: false,
-                      builder: (inDialogContext) {
-                        return const LoginDialog();
-                      });
+                  Navigator.push<void>(
+                      model.rootBuildContext,
+                      MaterialPageRoute<void>(
+                          builder: (BuildContext context) => const Login()));
                 },
               ),
             ]),

@@ -28,7 +28,13 @@ class _RoomState extends State<Room> {
           return Scaffold(
             resizeToAvoidBottomInset: true,
             appBar: AppBar(
-              title: Text(model.currentRoomName),
+              title: Text(
+                model.currentRoomName,
+                style: Theme.of(model.rootBuildContext)
+                    .textTheme
+                    .bodyText1!
+                    .copyWith(fontSize: 18, color: Colors.white),
+              ),
               actions: [
                 PopupMenuButton(
                   onSelected: (selectedValue) {
@@ -99,16 +105,35 @@ class _RoomState extends State<Room> {
                     children: [
                       ExpansionPanel(
                         isExpanded: _expanded,
-                        headerBuilder: (inContext, isExpanded) => const Text(
+                        headerBuilder: (inContext, isExpanded) => Text(
                           'Users in the room',
+                          style: Theme.of(model.rootBuildContext)
+                              .textTheme
+                              .bodyText1,
                         ),
                         body: Builder(
                           builder: (inContext) {
                             List<Widget> roomUsers = [];
                             for (var user in model.currentRoomUserList) {
-                              roomUsers.add(Text(user['userName']));
+                              roomUsers.add(Card(
+                                elevation: 5,
+                                margin:
+                                    const EdgeInsets.only(left: 15, bottom: 10),
+                                child: Column(
+                                  children: [
+                                    Image.asset(
+                                        'assets/images/user_avatar.png'),
+                                    Text(
+                                      user['userName'],
+                                      style: Theme.of(model.rootBuildContext)
+                                          .textTheme
+                                          .bodyText1,
+                                    ),
+                                  ],
+                                ),
+                              ));
                             }
-                            return Column(
+                            return Row(
                               children: roomUsers,
                             );
                           },
@@ -126,9 +151,26 @@ class _RoomState extends State<Room> {
                       itemBuilder: (inContext, index) {
                         Map message = model.currentRoomMessages[index];
                         return message['roomName'] == model.currentRoomName
-                            ? ListTile(
-                                title: Text(message['message']),
-                                subtitle: Text(message['userName']),
+                            ? Container(
+                                decoration: BoxDecoration(
+                                  color: Colors.grey[300],
+                                  borderRadius: const BorderRadius.all(
+                                    Radius.circular(20),
+                                  ),
+                                ),
+                                width: 120,
+                                padding: const EdgeInsets.symmetric(
+                                  vertical: 10,
+                                  horizontal: 12,
+                                ),
+                                margin: const EdgeInsets.symmetric(
+                                  vertical: 10,
+                                  horizontal: 8,
+                                ),
+                                child: ListTile(
+                                  title: Text(message['message']),
+                                  subtitle: Text(message['userName']),
+                                ),
                               )
                             : Container();
                       },
@@ -137,44 +179,49 @@ class _RoomState extends State<Room> {
                 ],
               ),
             ),
-            bottomNavigationBar: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-              child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    SizedBox(
-                      height: 15,
-                      width: MediaQuery.of(inContext).size.width * 0.75,
-                      child: TextField(
-                        controller: _messageController,
-                        onChanged: (value) {
-                          setState(() {
-                            _messageText = value;
-                          });
-                        },
-                        decoration:
-                            const InputDecoration(hintText: 'Say something'),
-                      ),
-                    ),
-                    IconButton(
-                        onPressed: () {
-                          connector.post(model.userName, model.currentRoomName,
-                              _messageText, (inStatus) {
-                            if (inStatus == 'ok') {
-                              model.addMessage(model.userName, _messageText);
-                              _messageController.clear();
-                              _scrollController.jumpTo(
-                                  _scrollController.position.maxScrollExtent);
-                            }
-                          });
-                        },
-                        icon: const Icon(
-                          Icons.send,
-                          size: 36,
-                          color: Colors.cyan,
-                        ))
-                  ]),
-            ),
+            bottomNavigationBar: Row(children: [
+              Container(
+                decoration: BoxDecoration(
+                  color: Theme.of(model.rootBuildContext).colorScheme.secondary,
+                  borderRadius: const BorderRadius.all(
+                    Radius.circular(20),
+                  ),
+                ),
+                padding:
+                    const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+                margin: const EdgeInsets.symmetric(vertical: 5, horizontal: 20),
+                height: 60,
+                width: 250,
+                child: TextField(
+                  style: const TextStyle(color: Colors.white),
+                  controller: _messageController,
+                  onChanged: (value) {
+                    setState(() {
+                      _messageText = value;
+                    });
+                  },
+                  decoration: const InputDecoration(hintText: 'Say something'),
+                ),
+              ),
+              IconButton(
+                  onPressed: () {
+                    connector.post(
+                        model.userName, model.currentRoomName, _messageText,
+                        (inStatus) {
+                      if (inStatus == 'ok') {
+                        model.addMessage(model.userName, _messageText);
+                        _messageController.clear();
+                        _scrollController
+                            .jumpTo(_scrollController.position.maxScrollExtent);
+                      }
+                    });
+                  },
+                  icon: const Icon(
+                    Icons.send,
+                    size: 48,
+                    color: Colors.cyan,
+                  ))
+            ]),
           );
         },
       ),
@@ -192,7 +239,11 @@ class _RoomState extends State<Room> {
               child: ScopedModelDescendant<FlutterChatModel>(
                 builder: (inContext, child, model) {
                   return AlertDialog(
-                    title: Text('Select a user to $inviteOrKick'),
+                    title: Text(
+                      'Select a user to $inviteOrKick',
+                      style:
+                          Theme.of(model.rootBuildContext).textTheme.bodyText1,
+                    ),
                     content: SizedBox(
                       width: double.maxFinite,
                       height: double.maxFinite / 2,
@@ -213,9 +264,13 @@ class _RoomState extends State<Room> {
                           return Padding(
                             padding: const EdgeInsets.all(10.0),
                             child: ListTile(
+                              leading:
+                                  Image.asset('assets/images/user_avatar.png'),
                               title: Text(
                                 user['userName'],
-                                style: const TextStyle(fontSize: 18),
+                                style: Theme.of(model.rootBuildContext)
+                                    .textTheme
+                                    .bodyText1,
                               ),
                               onTap: () {
                                 if (inviteOrKick == 'invite') {
@@ -226,7 +281,7 @@ class _RoomState extends State<Room> {
                                     Navigator.of(inContext).pop();
                                     ScaffoldMessenger.of(inContext)
                                         .showSnackBar(const SnackBar(
-                                            content: Text('invition Sent ')));
+                                            content: Text('invitation Sent ')));
                                   });
                                 } else {
                                   connector.kick(

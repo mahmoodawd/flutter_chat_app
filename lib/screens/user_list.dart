@@ -16,18 +16,32 @@ class UserList extends StatelessWidget {
         builder: (context, child, model) {
           return Scaffold(
               appBar: AppBar(
-                title: const Text('Users List'),
+                title: Text(
+                  'Users List',
+                  style: Theme.of(model.rootBuildContext)
+                      .textTheme
+                      .bodyText1!
+                      .copyWith(fontSize: 18, color: Colors.white),
+                ),
               ),
               drawer: const AppDrawer(),
-              body: ListView.builder(
+              body: GridView.builder(
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 3),
                 itemCount: model.userList.length,
                 itemBuilder: (context, index) {
                   Map user = model.userList[index];
                   return Padding(
                     padding: const EdgeInsets.all(15.0),
-                    child: ListTile(
-                      leading: Image.asset('assets/images/user_avatar.png'),
-                      title: Text(user['userName']),
+                    child: GridTile(
+                      footer: Text(
+                        user['userName'],
+                        textAlign: TextAlign.center,
+                        style: Theme.of(model.rootBuildContext)
+                            .textTheme
+                            .bodyText1,
+                      ),
+                      child: Image.asset('assets/images/user_avatar.png'),
                     ),
                   );
                 },

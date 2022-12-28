@@ -13,11 +13,9 @@ import 'utils.dart';
 String serverUrl = 'http://192.168.1.2';
 late SocketIO _io;
 
-
 void connectToServer(final Function inCallBack) {
   _io = SocketIOManager().createSocketIO(serverUrl, '/', query: '',
-      socketStatusCallback:
-       (inData) {
+      socketStatusCallback: (inData) {
     if (inData == 'connect') {
       _io.subscribe('newUser', newUser);
       _io.subscribe('created', created);
@@ -30,6 +28,16 @@ void connectToServer(final Function inCallBack) {
       inCallBack();
     }
   });
+  // SocketIOManager().destroySocket(_io);
+  // _io = SocketIOManager().createSocketIO(serverUrl, "/", query: "",
+  //     socketStatusCallback: (inData) {
+  //   print("## Connector.connectToServer(): callback: inData = $inData");
+  //   if (inData == "connect") {
+  //     print("## Connector.connectToServer(): callback: Connected to server");
+  //     inCallBack();
+  //   }
+  // });
+
   _io.init();
   _io.connect();
 }

@@ -16,10 +16,33 @@ class Home extends StatelessWidget {
         builder: (context, child, model) {
           return Scaffold(
             appBar: AppBar(
-              title: const Text('Flutter Chat'),
+              title: Text(
+                'Flutter Chat',
+                style: Theme.of(model.rootBuildContext)
+                    .textTheme
+                    .bodyText1!
+                    .copyWith(fontSize: 18, color: Colors.white),
+              ),
             ),
             drawer: const AppDrawer(),
-            body: Center(child: Text(model.greeting)),
+            body: Padding(
+              padding: const EdgeInsets.all(30.0),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  const Icon(
+                    Icons.question_answer,
+                    size: 100,
+                  ),
+                  Text(
+                    model.greeting,
+                    style: Theme.of(model.rootBuildContext).textTheme.headline1,
+                    textAlign: TextAlign.center,
+                  ),
+                ],
+              ),
+            ),
           );
         },
       ),

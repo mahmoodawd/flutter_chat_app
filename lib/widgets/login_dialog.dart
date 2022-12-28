@@ -104,7 +104,7 @@ class LoginDialog extends StatelessWidget {
                           if (validateStatus == 'created') {
                             storeCredentials(userName, password);
                             model.setUserName(userName);
-                            Navigator.of(context).pop();
+                            Navigator.of(model.rootBuildContext).pop();
                             model.setGreeting(
                                 'Welcome $userName to Fluter Chat ');
                           }

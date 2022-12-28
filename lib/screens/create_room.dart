@@ -29,7 +29,13 @@ class _CreateRoomState extends State<CreateRoom> {
           return Scaffold(
             resizeToAvoidBottomInset: true,
             appBar: AppBar(
-              title: const Text('Create Room'),
+              title: Text(
+                'Create Room',
+                style: Theme.of(model.rootBuildContext)
+                    .textTheme
+                    .bodyText1!
+                    .copyWith(fontSize: 18, color: Colors.white),
+              ),
             ),
             drawer: const AppDrawer(),
             bottomNavigationBar: Padding(
