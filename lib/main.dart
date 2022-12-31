@@ -8,13 +8,13 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 
+import 'utils.dart';
 import '../model.dart';
 import '../screens/create_room.dart';
 import '../screens/home.dart';
 import '../screens/lobby.dart';
 import '../screens/room.dart';
 import '../screens/user_list.dart';
-import '../widgets/login_dialog.dart';
 import '../screens/login.dart';
 
 var credentials;
@@ -55,9 +55,7 @@ class FlutterChat extends StatelessWidget {
               fontFamily: "Lobster", fontSize: 48, color: Colors.black),
         ),
       ),
-      home: const Scaffold(
-        body: FlutterChatMain(),
-      ),
+      home: const FlutterChatMain(),
     );
   }
 }
@@ -90,8 +88,7 @@ class FlutterChatMain extends StatelessWidget {
   Future<void> excuteAfterBuild() async {
     if (credentialFileExists) {
       List credParts = credentials.split('============');
-      const LoginDialog()
-          .validateWithStoredCredentials(credParts[0], credParts[1]);
+      validateWithStoredCredentials(credParts[0], credParts[1]);
     } else {
       Navigator.push<void>(
           model.rootBuildContext,

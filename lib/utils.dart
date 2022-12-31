@@ -1,9 +1,14 @@
+import 'dart:io';
+
+// ignore: depend_on_referenced_packages
+import "package:path/path.dart";
+
 import 'package:flutter/material.dart';
 
 import 'model.dart';
+import 'connector.dart' as connector;
 
-/// Show the please wait dialog.
-void showPleaseWait() { 
+void showPleaseWait() {
   showDialog(
       context: model.rootBuildContext,
       barrierDismissible: false,
@@ -31,8 +36,47 @@ void showPleaseWait() {
                                   style: TextStyle(color: Colors.white))))
                     ])));
       });
-} /* End showPleaseWait(). */
+}
 
 void hidePleaseWait() {
   Navigator.of(model.rootBuildContext).pop();
+}
+
+void validateWithStoredCredentials(
+    final String inUserName, final String inPassword) {
+  // Trigger connection to server.
+  connector.connectToServer(() {
+    // Ok, we're connected, now try to validate the user.
+    connector.validate(inUserName, inPassword, (inStatus) {
+      if (inStatus == "ok" || inStatus == "created") {
+        model.setUserName(inUserName);
+        model.setGreeting("Welcome back, $inUserName!");
+
+        // If we get a fail back then the only possible cause is the server restarted and the username stored is
+        // already taken.  In that case, we'll delete the credentials file and let the user know.
+      } else if (inStatus == "fail") {
+        // Alert user to the result.
+        showDialog(
+            context: model.rootBuildContext,
+            barrierDismissible: false,
+            builder: (final BuildContext inDialogContext) => AlertDialog(
+                    title: const Text("Validation failed"),
+                    content: const Text(
+                        "It appears that the server has restarted and the username you last used was "
+                        "subsequently taken by someone else.\n\nPlease re-start FlutterChat and choose a different username."),
+                    actions: [
+                      TextButton(
+                          child: const Text("Ok"),
+                          onPressed: () {
+                            // Delete the credentials file.
+                            var credentialsFile =
+                                File(join(model.docsDir.path, "credentials"));
+                            credentialsFile.deleteSync();
+                            // Exit the app.
+                            exit(0);
+                          })
+                    ]));
+      }
+    });
+  });
 }

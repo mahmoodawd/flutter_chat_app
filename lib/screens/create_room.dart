@@ -38,58 +38,6 @@ class _CreateRoomState extends State<CreateRoom> {
               ),
             ),
             drawer: const AppDrawer(),
-            bottomNavigationBar: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 10),
-              child: SingleChildScrollView(
-                child: Row(
-                  children: [
-                    TextButton(
-                      onPressed: () {
-                        FocusScope.of(context).requestFocus(FocusNode());
-                        Navigator.of(context).pop();
-                      },
-                      child: const Text(
-                        'Cancel',
-                        style: TextStyle(
-                            fontSize: 18, fontWeight: FontWeight.bold),
-                      ),
-                    ),
-                    const Spacer(),
-                    TextButton(
-                      onPressed: () {
-                        if (_createRoomFormKey.currentState!.validate()) {
-                          _createRoomFormKey.currentState!.save();
-                          connector.create(
-                              _roomName,
-                              _roomDescription,
-                              _isPrivate,
-                              _maxPeople,
-                              model.userName, (inStatus, inRoomList) {
-                            if (inStatus == 'created') {
-                              FocusScope.of(context).requestFocus(FocusNode());
-                              Navigator.of(context).pop();
-                              model.setRoomList(inRoomList);
-                            } else {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(
-                                      duration: Duration(seconds: 2),
-                                      backgroundColor: Colors.red,
-                                      content: Text(
-                                          'Sorry! This room Name is reserved.')));
-                            }
-                          });
-                        }
-                      },
-                      child: const Text(
-                        'Create',
-                        style: TextStyle(
-                            fontSize: 18, fontWeight: FontWeight.bold),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
             body: Form(
               key: _createRoomFormKey,
               child: ListView(
@@ -102,7 +50,7 @@ class _CreateRoomState extends State<CreateRoom> {
                     textInputAction: TextInputAction.next,
                     validator: (value) {
                       if (value!.length < 2 || value.length > 15) {
-                        return 'username can not be \nless than 2 or more than 15 chars long';
+                        return 'Room Title can not be \nless than 2 or more than 15 chars long';
                       }
                       return null;
                     },
@@ -117,8 +65,7 @@ class _CreateRoomState extends State<CreateRoom> {
                   ),
                   TextFormField(
                     decoration: const InputDecoration(
-                        icon: Icon(Icons.description),
-                        hintText: 'Type something about it'),
+                        icon: Icon(Icons.description), hintText: 'Describe it'),
                     validator: (value) {
                       return null;
                     },
@@ -172,6 +119,59 @@ class _CreateRoomState extends State<CreateRoom> {
                               _isPrivate = value;
                             });
                           },
+                        ),
+                      ],
+                    ),
+                  ),
+                  Container(
+                    child: Row(
+                      children: [
+                        TextButton(
+                          onPressed: () {
+                            FocusScope.of(context).requestFocus(
+                                FocusNode()); //To hide the keyboard
+                            Navigator.of(context).pop();
+                          },
+                          child: const Text(
+                            'Cancel',
+                            style: TextStyle(
+                                fontSize: 18, fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                        SizedBox(
+                          width: MediaQuery.of(context).size.width * 0.50,
+                        ),
+                        TextButton(
+                          onPressed: () {
+                            if (_createRoomFormKey.currentState!.validate()) {
+                              _createRoomFormKey.currentState!.save();
+                              connector.create(
+                                  _roomName,
+                                  _roomDescription,
+                                  _isPrivate,
+                                  _maxPeople,
+                                  model.userName, (inStatus, inRoomList) {
+                                if (inStatus == 'created') {
+                                  FocusScope.of(context)
+                                      .requestFocus(FocusNode());
+                                  Navigator.of(context).pop();
+                                  model.setRoomList(inRoomList);
+                                } else {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                      const SnackBar(
+                                          duration: Duration(seconds: 2),
+                                          backgroundColor: Colors.red,
+                                          content: Text(
+                                              'Sorry! This name is reserved.')));
+                                }
+                              });
+                            }
+                          },
+                          child: const Text(
+                            'Create',
+                            style: TextStyle(
+                                fontSize: 18, fontWeight: FontWeight.bold),
+                          ),
                         ),
                       ],
                     ),

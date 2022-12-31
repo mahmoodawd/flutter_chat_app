@@ -39,28 +39,97 @@ class _RoomState extends State<Room> {
                 PopupMenuButton(
                   onSelected: (selectedValue) {
                     if (selectedValue == 'leave') {
-                      connector.leave(model.currentRoomName, model.userList,
-                          () {
-                        model
-                          ..removeRoomInvite(model.currentRoomName)
-                          ..setCurrentRoomUserList({})
-                          ..setCurrentRoomName(
-                              FlutterChatModel.DEFAULT_ROOM_NAME)
-                          ..setCurrentRoomEnabled(false);
-                        ScaffoldMessenger.of(inContext).showSnackBar(
-                            const SnackBar(
-                                content: Text('You Just left from the room')));
-                        Navigator.of(inContext).pushNamedAndRemoveUntil(
-                            '/', ModalRoute.withName('/'));
-                      });
+                      showDialog(
+                        context: context,
+                        builder: (context) {
+                          return AlertDialog(
+                            content: Text(
+                              'Are you really wanna leave?',
+                              style: Theme.of(model.rootBuildContext)
+                                  .textTheme
+                                  .bodyText1,
+                            ),
+                            actions: [
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  TextButton(
+                                      onPressed: () =>
+                                          Navigator.of(context).pop(),
+                                      child: const Text('No')),
+                                  const Divider(),
+                                  TextButton(
+                                      onPressed: () {
+                                        connector.leave(model.currentRoomName,
+                                            model.userList, () {
+                                          model
+                                            ..removeRoomInvite(
+                                                model.currentRoomName)
+                                            ..setCurrentRoomUserList({})
+                                            ..setCurrentRoomName(
+                                                FlutterChatModel
+                                                    .DEFAULT_ROOM_NAME)
+                                            ..setCurrentRoomEnabled(false);
+                                          ScaffoldMessenger.of(inContext)
+                                              .showSnackBar(const SnackBar(
+                                                  content: Text(
+                                                      'You Just left from the room')));
+                                          Navigator.of(context).pop();
+                                          Navigator.of(inContext)
+                                              .pushNamedAndRemoveUntil('/',
+                                                  ModalRoute.withName('/'));
+                                        });
+                                      },
+                                      child: const Text('Yes'))
+                                ],
+                              )
+                            ],
+                          );
+                        },
+                      );
                     } else if (selectedValue == 'close') {
-                      connector.close(model.currentRoomName, () {
-                        Navigator.of(inContext).pushNamedAndRemoveUntil(
-                            '/', ModalRoute.withName('/'));
-                        model.setCurrentRoomEnabled(false);
-                        model.setCurrentRoomName(
-                            FlutterChatModel.DEFAULT_ROOM_NAME);
-                      });
+                      showDialog(
+                        context: context,
+                        builder: (context) {
+                          return AlertDialog(
+                            content: Text(
+                              'Room will be lost, proceed?',
+                              style: Theme.of(model.rootBuildContext)
+                                  .textTheme
+                                  .bodyText1,
+                            ),
+                            actions: [
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  TextButton(
+                                      onPressed: () =>
+                                          Navigator.of(context).pop(),
+                                      child: const Text('No')),
+                                  const Divider(),
+                                  TextButton(
+                                      onPressed: () {
+                                        connector.close(model.currentRoomName,
+                                            () {
+                                          model.setCurrentRoomEnabled(false);
+                                          model.setCurrentRoomName(
+                                              FlutterChatModel
+                                                  .DEFAULT_ROOM_NAME);
+                                          Navigator.of(context).pop();
+                                          Navigator.of(inContext)
+                                              .pushNamedAndRemoveUntil('/',
+                                                  ModalRoute.withName('/'));
+                                        });
+                                      },
+                                      child: const Text('Yes'))
+                                ],
+                              )
+                            ],
+                          );
+                        },
+                      );
                     } else {
                       _inviteOrKick(inContext, selectedValue);
                     }
@@ -175,53 +244,55 @@ class _RoomState extends State<Room> {
                             : Container();
                       },
                     ),
-                  )
+                  ),
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 10, horizontal: 10),
+                    margin:
+                        const EdgeInsets.symmetric(vertical: 5, horizontal: 20),
+                    child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
+                          Expanded(
+                            child: TextField(
+                              style: const TextStyle(),
+                              controller: _messageController,
+                              onChanged: (value) {
+                                setState(() {
+                                  _messageText = value;
+                                });
+                              },
+                              decoration: const InputDecoration(
+                                  hintText: 'Say something...'),
+                            ),
+                          ),
+                          const Divider(indent: 5.0),
+                          IconButton(
+                            onPressed: () {
+                              connector.post(
+                                  model.userName,
+                                  model.currentRoomName,
+                                  _messageText, (inStatus) {
+                                if (inStatus == 'ok') {
+                                  model.addMessage(
+                                      model.userName, _messageText);
+                                  _messageController.clear();
+                                  _scrollController.jumpTo(_scrollController
+                                      .position.maxScrollExtent);
+                                }
+                              });
+                            },
+                            icon: const Icon(
+                              Icons.send,
+                              size: 48,
+                              color: Colors.cyan,
+                            ),
+                          )
+                        ]),
+                  ),
                 ],
               ),
             ),
-            bottomNavigationBar: Row(children: [
-              Container(
-                decoration: BoxDecoration(
-                  color: Theme.of(model.rootBuildContext).colorScheme.secondary,
-                  borderRadius: const BorderRadius.all(
-                    Radius.circular(20),
-                  ),
-                ),
-                padding:
-                    const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-                margin: const EdgeInsets.symmetric(vertical: 5, horizontal: 20),
-                height: 60,
-                width: 250,
-                child: TextField(
-                  style: const TextStyle(color: Colors.white),
-                  controller: _messageController,
-                  onChanged: (value) {
-                    setState(() {
-                      _messageText = value;
-                    });
-                  },
-                  decoration: const InputDecoration(hintText: 'Say something'),
-                ),
-              ),
-              IconButton(
-                  onPressed: () {
-                    connector.post(
-                        model.userName, model.currentRoomName, _messageText,
-                        (inStatus) {
-                      if (inStatus == 'ok') {
-                        model.addMessage(model.userName, _messageText);
-                        _messageController.clear();
-                        _scrollController
-                            .jumpTo(_scrollController.position.maxScrollExtent);
-                      }
-                    });
-                  },
-                  icon: const Icon(
-                    Icons.send,
-                    size: 48,
-                    color: Colors.cyan,
-                  ))
-            ]),
           );
         },
       ),
