@@ -3,7 +3,7 @@ import 'package:scoped_model/scoped_model.dart';
 import 'package:flutter/material.dart';
 
 import '../model.dart' show FlutterChatModel, model;
-import '../widgets/app_drawer.dart';
+import '../widgets/shared/app_drawer.dart';
 
 class Home extends StatelessWidget {
   const Home({super.key});

@@ -6,6 +6,8 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 
+import '../utils.dart';
+
 import '../connector.dart' as connector;
 import '../model.dart' show FlutterChatModel, model;
 
@@ -129,14 +131,10 @@ class Login extends StatelessWidget {
                                   if (validateStatus == 'fail') {
                                     //When server replies with "fail" it means that either
                                     //password is incorrect or the usre is trying to access an existing account
-                                    ScaffoldMessenger.of(model.rootBuildContext)
-                                        .showSnackBar(
-                                      const SnackBar(
-                                        content: Text(
-                                            'Check username and password!'),
-                                        backgroundColor: Colors.red,
-                                      ),
-                                    );
+                                    showBottomMessage(
+                                        context: context,
+                                        message:
+                                            'Check username and password!');
                                     connector.resetSocketConnection();
                                   }
                                   if (validateStatus == 'created') {

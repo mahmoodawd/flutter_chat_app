@@ -4,9 +4,9 @@ import 'package:scoped_model/scoped_model.dart';
 
 import 'package:flutter/material.dart';
 
-import "../model.dart" show FlutterChatModel, model;
-import '../connector.dart' as connector;
-import '../screens/login.dart';
+import '../../model.dart' show FlutterChatModel, model;
+import '../../connector.dart' as connector;
+import '../../screens/login.dart';
 
 class AppDrawer extends StatelessWidget {
   const AppDrawer({

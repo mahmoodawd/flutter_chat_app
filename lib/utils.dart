@@ -80,3 +80,52 @@ void validateWithStoredCredentials(
     });
   });
 }
+
+bool isRoomMember(final String inUser, final List userList) {
+  for (Map user in userList) {
+    if (user['userName'] == inUser) {
+      return true;
+    }
+  }
+  return false;
+}
+
+void showBottomMessage({BuildContext? context, String? message}) {
+  ScaffoldMessenger.of(context!).showSnackBar(
+    SnackBar(
+      backgroundColor: Colors.red,
+      duration: const Duration(seconds: 2),
+      content: Text(message!),
+    ),
+  );
+}
+
+void showConfirmationDialog(final BuildContext inContext, final String message,
+    void Function() confirmAction) {
+  showDialog(
+    context: inContext,
+    builder: (context) {
+      return AlertDialog(
+        content: Text(
+          message,
+          style: Theme.of(model.rootBuildContext).textTheme.bodyText1,
+        ),
+        actions: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              TextButton(
+                  onPressed: () => Navigator.of(context).pop(),
+                  child: const Text('No')),
+              const Divider(),
+              TextButton(
+                onPressed: confirmAction,
+                child: const Text('Yes'),
+              )
+            ],
+          )
+        ],
+      );
+    },
+  );
+}

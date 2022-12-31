@@ -3,7 +3,7 @@ import 'package:scoped_model/scoped_model.dart';
 import 'package:flutter/material.dart';
 
 import '../model.dart';
-import '../widgets/app_drawer.dart';
+import '../widgets/shared/app_drawer.dart';
 
 class UserList extends StatelessWidget {
   const UserList({super.key});

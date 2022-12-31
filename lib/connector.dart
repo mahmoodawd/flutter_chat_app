@@ -225,15 +225,10 @@ void invited(inData) async {
   String inviterName = payload['inviterName'];
 
   model.addRoomInvite(roomName);
-  ScaffoldMessenger.of(model.rootBuildContext).showSnackBar(SnackBar(
-      duration: const Duration(seconds: 10),
-      backgroundColor: Theme.of(model.rootBuildContext).primaryColor,
-      content: Text('You are invited to the room $roomName by $inviterName \n'
-          'You can enter the room from the lobby'),
-      action: SnackBarAction(
-        label: 'OK',
-        onPressed: () {},
-      )));
+  showBottomMessage(
+      context: model.rootBuildContext,
+      message: 'You are invited to the room $roomName by $inviterName \n'
+          'You can enter the room from the lobby');
 }
 
 void posted(inData) {
