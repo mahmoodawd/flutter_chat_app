@@ -142,7 +142,12 @@ class LoginForm extends StatelessWidget {
           _storeCredentials(userName, password);
           model.setUserName(userName);
           _setGreetingBasedOnUserType(userName, validateStatus);
-          Navigator.of(context).popUntil(ModalRoute.withName('/'));
+          FocusScope.of(context)
+              .requestFocus(FocusNode()); //To hide the keyboard
+          Navigator.of(context).pushNamedAndRemoveUntil(
+            '/',
+            (route) => false,
+          );
         }
       });
     });

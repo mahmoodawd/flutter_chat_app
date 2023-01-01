@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:scoped_model/scoped_model.dart';
 
 import '../../model.dart';
 
@@ -9,13 +10,18 @@ class RoomsList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListView.builder(
-      itemCount: model.roomList.length,
-      itemBuilder: (context, index) {
-        Map room = model.roomList[index];
+    return ScopedModel<FlutterChatModel>(
+        model: model,
+        child: ScopedModelDescendant<FlutterChatModel>(
+            builder: (context, child, model) {
+          return ListView.builder(
+            itemCount: model.roomList.length,
+            itemBuilder: (context, index) {
+              Map room = model.roomList[index];
 
-        return RoomItem(room: room);
-      },
-    );
+              return RoomItem(room: room);
+            },
+          );
+        }));
   }
 }

@@ -107,22 +107,25 @@ void showConfirmationDialog(final BuildContext inContext, final String message,
     void Function() confirmAction) {
   showDialog(
     context: inContext,
-    builder: (context) {
+    builder: (inContext) {
       return AlertDialog(
         content: Text(
           message,
-          style: Theme.of(model.rootBuildContext).textTheme.bodyText1,
+          style: appTextTheme.bodyText1,
         ),
         actions: [
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               TextButton(
-                  onPressed: () => Navigator.of(context).pop(),
+                  onPressed: () => Navigator.of(inContext).pop(),
                   child: const Text('No')),
               const Divider(),
               TextButton(
-                onPressed: confirmAction,
+                onPressed: () {
+                  confirmAction();
+                  Navigator.of(inContext).pop();
+                },
                 child: const Text('Yes'),
               )
             ],

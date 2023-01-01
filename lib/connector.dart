@@ -10,7 +10,7 @@ import 'package:flutter/material.dart';
 import '../model.dart' show FlutterChatModel, model;
 import 'utils.dart';
 
-String serverUrl = 'http://192.168.1.2';
+String serverUrl = 'http://192.168.12.1';
 late SocketIO _io;
 
 void connectToServer(final Function inCallBack) {

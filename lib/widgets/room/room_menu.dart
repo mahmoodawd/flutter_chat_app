@@ -109,7 +109,6 @@ class RoomMenu extends StatelessWidget {
         ..setCurrentRoomEnabled(false);
       showBottomMessage(
           context: inContext, message: 'You Just left from the room');
-      Navigator.of(inContext).pop();
       Navigator.of(inContext)
           .pushNamedAndRemoveUntil('/', ModalRoute.withName('/'));
     });
@@ -119,7 +118,7 @@ class RoomMenu extends StatelessWidget {
     connector.close(model.currentRoomName, () {
       model.setCurrentRoomEnabled(false);
       model.setCurrentRoomName(FlutterChatModel.DEFAULT_ROOM_NAME);
-      Navigator.of(inContext).pop();
+      showBottomMessage(context: inContext, message: 'Room Closed');
       Navigator.of(inContext)
           .pushNamedAndRemoveUntil('/', ModalRoute.withName('/'));
     });

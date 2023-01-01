@@ -24,11 +24,41 @@ class _RoomCreationFormState extends State<RoomCreationForm> {
 
   @override
   Widget build(BuildContext context) {
+    var roomNameField = TextFormField(
+      decoration: const InputDecoration(
+          icon: Icon(Icons.title), hintText: 'Type room Name here'),
+      textInputAction: TextInputAction.next,
+      validator: (value) {
+        if (value!.length < 2 || value.length > 15) {
+          return 'Room Title can not be \nless than 2 or more than 15 chars long';
+        }
+        return null;
+      },
+      onSaved: (newValue) {
+        setState(() {
+          _roomName = newValue!;
+        });
+      },
+    );
+
+    var roomDesField = TextFormField(
+      decoration: const InputDecoration(
+          icon: Icon(Icons.description), hintText: 'Describe it'),
+      validator: (value) {
+        return null;
+      },
+      onSaved: (newValue) {
+        setState(() {
+          _roomDescription = newValue!;
+        });
+      },
+    );
+
     var maxPeopleSlider = ListTile(
       title: Row(
         children: [
           const Text('max\nPeople'),
-          const SizedBox(width: 20),
+          const Divider(),
           SliderTheme(
             data: SliderTheme.of(context).copyWith(
                 showValueIndicator: ShowValueIndicator.always,
@@ -52,6 +82,7 @@ class _RoomCreationFormState extends State<RoomCreationForm> {
       ),
       trailing: Text('$_maxPeople'),
     );
+
     var isPrivateSwitcher = ListTile(
       title: Row(
         children: [
@@ -69,7 +100,9 @@ class _RoomCreationFormState extends State<RoomCreationForm> {
         ],
       ),
     );
+
     var bottomButtons = Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         TextButton(
           onPressed: () {
@@ -82,9 +115,7 @@ class _RoomCreationFormState extends State<RoomCreationForm> {
             style: appTextTheme.bodyText1!.copyWith(fontSize: 18),
           ),
         ),
-        SizedBox(
-          width: MediaQuery.of(context).size.width * 0.50,
-        ),
+        const Divider(),
         TextButton(
           onPressed: () {
             if (_createRoomFormKey.currentState!.validate()) {
@@ -110,34 +141,6 @@ class _RoomCreationFormState extends State<RoomCreationForm> {
           ),
         ),
       ],
-    );
-    var roomNameField = TextFormField(
-      decoration: const InputDecoration(
-          icon: Icon(Icons.title), hintText: 'Type room Name here'),
-      textInputAction: TextInputAction.next,
-      validator: (value) {
-        if (value!.length < 2 || value.length > 15) {
-          return 'Room Title can not be \nless than 2 or more than 15 chars long';
-        }
-        return null;
-      },
-      onSaved: (newValue) {
-        setState(() {
-          _roomName = newValue!;
-        });
-      },
-    );
-    var roomDesField = TextFormField(
-      decoration: const InputDecoration(
-          icon: Icon(Icons.description), hintText: 'Describe it'),
-      validator: (value) {
-        return null;
-      },
-      onSaved: (newValue) {
-        setState(() {
-          _roomDescription = newValue!;
-        });
-      },
     );
 
     return SingleChildScrollView(

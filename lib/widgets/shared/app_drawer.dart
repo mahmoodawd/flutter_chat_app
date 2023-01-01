@@ -7,7 +7,6 @@ import 'package:flutter/material.dart';
 
 import '../../model.dart' show FlutterChatModel, model;
 import '../../connector.dart' as connector;
-import '../../screens/login.dart';
 
 class AppDrawer extends StatelessWidget {
   const AppDrawer({
@@ -109,10 +108,9 @@ class AppDrawer extends StatelessWidget {
                 leading: const Icon(Icons.logout),
                 onTap: () async {
                   connector.resetSocketConnection();
-                  Navigator.push<void>(
-                      model.rootBuildContext,
-                      MaterialPageRoute<void>(
-                          builder: (BuildContext context) => const Login()));
+
+                  Navigator.of(context)
+                      .pushNamedAndRemoveUntil('/Login', (route) => false);
                 },
               ),
             ]),
