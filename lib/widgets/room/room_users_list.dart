@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_chat/utils.dart';
 
 import '../../model.dart';
 
@@ -28,7 +29,7 @@ class _RoomUsersListState extends State<RoomUsersList> {
             headerBuilder: (inContext, isExpanded) => Text(
               'Users in the room',
               textAlign: _expanded ? TextAlign.center : TextAlign.start,
-              style: Theme.of(model.rootBuildContext).textTheme.bodyText1,
+              style: appTextTheme.bodyText1,
             ),
             body: Builder(
               builder: (inContext) {

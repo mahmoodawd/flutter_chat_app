@@ -1,3 +1,4 @@
+import 'package:flutter_chat/utils.dart';
 import 'package:scoped_model/scoped_model.dart';
 
 import 'package:flutter/material.dart';
@@ -26,14 +27,8 @@ class _RoomState extends State<Room> {
         builder: (inContext, child, model) {
           return Scaffold(
             resizeToAvoidBottomInset: true,
-            appBar: AppBar(
-              title: Text(
-                model.currentRoomName,
-                style: Theme.of(model.rootBuildContext)
-                    .textTheme
-                    .bodyText1!
-                    .copyWith(fontSize: 18, color: Colors.white),
-              ),
+            appBar: buildAppBar(
+              pageTitle: model.currentRoomName,
               actions: const [
                 RoomMenu(),
               ],

@@ -3,6 +3,7 @@ import 'package:scoped_model/scoped_model.dart';
 import 'package:flutter/material.dart';
 
 import '../model.dart' show FlutterChatModel, model;
+import '../utils.dart';
 import '../widgets/shared/app_drawer.dart';
 
 class Home extends StatelessWidget {
@@ -15,15 +16,7 @@ class Home extends StatelessWidget {
       child: ScopedModelDescendant<FlutterChatModel>(
         builder: (context, child, model) {
           return Scaffold(
-            appBar: AppBar(
-              title: Text(
-                'Flutter Chat',
-                style: Theme.of(model.rootBuildContext)
-                    .textTheme
-                    .bodyText1!
-                    .copyWith(fontSize: 18, color: Colors.white),
-              ),
-            ),
+            appBar: buildAppBar(pageTitle: 'Home'),
             drawer: const AppDrawer(),
             body: Padding(
               padding: const EdgeInsets.all(30.0),
@@ -37,7 +30,7 @@ class Home extends StatelessWidget {
                   ),
                   Text(
                     model.greeting,
-                    style: Theme.of(model.rootBuildContext).textTheme.headline1,
+                    style: appTextTheme.headline1,
                     textAlign: TextAlign.center,
                   ),
                 ],

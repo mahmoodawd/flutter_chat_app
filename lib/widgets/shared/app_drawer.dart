@@ -1,5 +1,6 @@
 // ignore_for_file: depend_on_referenced_packages
 
+import 'package:flutter_chat/utils.dart';
 import 'package:scoped_model/scoped_model.dart';
 
 import 'package:flutter/material.dart';
@@ -20,6 +21,8 @@ class AppDrawer extends StatelessWidget {
         child: ScopedModelDescendant<FlutterChatModel>(
             builder: (context, inChild, inModel) {
           return Drawer(
+            elevation: 5,
+            backgroundColor: appPrimaryColor,
             width: MediaQuery.of(context).size.width * .70,
             child: Column(children: [
               Container(
@@ -34,25 +37,21 @@ class AppDrawer extends StatelessWidget {
                   title: Text(
                     model.userName,
                     textAlign: TextAlign.center,
-                    style: Theme.of(model.rootBuildContext)
-                        .textTheme
-                        .bodyText1!
-                        .copyWith(color: Colors.white),
+                    style:
+                        appTextTheme.bodyText1!.copyWith(color: Colors.white),
                   ),
                   subtitle: Text(
                     model.currentRoomName,
                     textAlign: TextAlign.center,
-                    style: Theme.of(model.rootBuildContext)
-                        .textTheme
-                        .headline1!
-                        .copyWith(fontSize: 18, color: Colors.white),
+                    style:
+                        appTextTheme.bodyText1!.copyWith(color: Colors.white),
                   ),
                 ),
               ),
               ListTile(
                 title: Text(
                   'Lobby',
-                  style: Theme.of(context).textTheme.bodyText1,
+                  style: appTextTheme.bodyText1,
                 ),
                 leading: const Icon(Icons.list),
                 onTap: () {
@@ -71,7 +70,8 @@ class AppDrawer extends StatelessWidget {
                 enabled: model.currentRoomEnabled,
                 title: Text(
                   'Current room',
-                  style: Theme.of(context).textTheme.bodyText1,
+                  style: appTextTheme.bodyText1!.copyWith(
+                      color: model.currentRoomEnabled ? null : Colors.grey),
                 ),
                 leading: const Icon(Icons.chat_rounded),
                 onTap: () {
@@ -86,7 +86,7 @@ class AppDrawer extends StatelessWidget {
               ListTile(
                 title: Text(
                   'Users',
-                  style: Theme.of(context).textTheme.bodyText1,
+                  style: appTextTheme.bodyText1,
                 ),
                 leading: const Icon(Icons.people),
                 onTap: () {
@@ -104,7 +104,7 @@ class AppDrawer extends StatelessWidget {
               ListTile(
                 title: Text(
                   'Logout',
-                  style: Theme.of(context).textTheme.bodyText1,
+                  style: appTextTheme.bodyText1,
                 ),
                 leading: const Icon(Icons.logout),
                 onTap: () async {

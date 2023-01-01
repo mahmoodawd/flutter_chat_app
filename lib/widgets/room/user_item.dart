@@ -18,7 +18,7 @@ class UserItem extends StatelessWidget {
         leading: Image.asset('assets/images/user_avatar.png'),
         title: Text(
           userName,
-          style: Theme.of(model.rootBuildContext).textTheme.bodyText1,
+          style: appTextTheme.bodyText1,
         ),
         onTap: () {
           if (inviteOrKick == 'invite') {

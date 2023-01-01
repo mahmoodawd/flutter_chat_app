@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 
 import '../model.dart';
 
+import '../utils.dart';
 import '../widgets/room_creation/room_creation_form.dart';
 import '../widgets/shared/app_drawer.dart';
 
@@ -23,15 +24,7 @@ class _CreateRoomState extends State<CreateRoom> {
         builder: (context, child, model) {
           return Scaffold(
             resizeToAvoidBottomInset: true,
-            appBar: AppBar(
-              title: Text(
-                'Create Room',
-                style: Theme.of(model.rootBuildContext)
-                    .textTheme
-                    .bodyText1!
-                    .copyWith(fontSize: 18, color: Colors.white),
-              ),
-            ),
+            appBar: buildAppBar(pageTitle: 'Create Room'),
             drawer: const AppDrawer(),
             body: const RoomCreationForm(),
           );

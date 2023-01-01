@@ -89,8 +89,7 @@ class RoomMenu extends StatelessWidget {
                   return AlertDialog(
                     title: Text(
                       'Select a user to $inviteOrKick',
-                      style:
-                          Theme.of(model.rootBuildContext).textTheme.bodyText1,
+                      style: appTextTheme.bodyText1,
                     ),
                     content: usersList,
                   );

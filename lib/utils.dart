@@ -8,6 +8,9 @@ import 'package:flutter/material.dart';
 import 'model.dart';
 import 'connector.dart' as connector;
 
+var appPrimaryColor = Theme.of(model.rootBuildContext).primaryColor;
+var appTextTheme = Theme.of(model.rootBuildContext).textTheme;
+
 void showPleaseWait() {
   showDialog(
       context: model.rootBuildContext,
@@ -127,5 +130,21 @@ void showConfirmationDialog(final BuildContext inContext, final String message,
         ],
       );
     },
+  );
+}
+
+PreferredSizeWidget buildAppBar(
+    {required String pageTitle, List<Widget>? actions}) {
+  return AppBar(
+    backgroundColor: appPrimaryColor,
+    iconTheme: const IconThemeData(color: Colors.black),
+    titleTextStyle: Theme.of(model.rootBuildContext)
+        .textTheme
+        .bodyText1!
+        .copyWith(fontSize: 18, color: Colors.black),
+    title: Text(
+      pageTitle,
+    ),
+    actions: actions,
   );
 }

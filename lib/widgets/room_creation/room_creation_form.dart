@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_chat/utils.dart';
 
+import '../../utils.dart';
 import '../../connector.dart' as connector;
 import '../../model.dart';
 
@@ -32,8 +32,11 @@ class _RoomCreationFormState extends State<RoomCreationForm> {
           SliderTheme(
             data: SliderTheme.of(context).copyWith(
                 showValueIndicator: ShowValueIndicator.always,
-                valueIndicatorColor: Theme.of(context).primaryColor),
+                valueIndicatorColor: appPrimaryColor,
+                valueIndicatorTextStyle: appTextTheme.bodyText1),
             child: Slider(
+              activeColor: Colors.black,
+              inactiveColor: appPrimaryColor,
               label: '$_maxPeople',
               value: _maxPeople.toDouble(),
               min: 1.0,
@@ -55,6 +58,7 @@ class _RoomCreationFormState extends State<RoomCreationForm> {
           const Text("Private"),
           const SizedBox(width: 20),
           Switch(
+            activeColor: Colors.black,
             value: _isPrivate,
             onChanged: (value) {
               setState(() {
@@ -73,9 +77,9 @@ class _RoomCreationFormState extends State<RoomCreationForm> {
                 .requestFocus(FocusNode()); //To hide the keyboard
             Navigator.of(context).pop();
           },
-          child: const Text(
+          child: Text(
             'Cancel',
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            style: appTextTheme.bodyText1!.copyWith(fontSize: 18),
           ),
         ),
         SizedBox(
@@ -100,9 +104,9 @@ class _RoomCreationFormState extends State<RoomCreationForm> {
               });
             }
           },
-          child: const Text(
+          child: Text(
             'Create',
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            style: appTextTheme.bodyText1!.copyWith(fontSize: 18),
           ),
         ),
       ],

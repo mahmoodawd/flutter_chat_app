@@ -44,7 +44,7 @@ class FlutterChat extends StatelessWidget {
     return MaterialApp(
       title: 'Flutter chat',
       theme: ThemeData(
-        primarySwatch: Colors.grey,
+        primaryColor: Colors.white,
         textTheme: const TextTheme(
           bodyText1: TextStyle(
             fontFamily: "BreeSerif",
